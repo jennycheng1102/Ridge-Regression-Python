@@ -27,3 +27,23 @@ var=0.01
 mu,sigma=0.0,np.sqrt(var)
 g=mu+sigma*np.random.rand(k)
 Y=Y+g
+#test sklearn fit
+lmod=sklearn.linear_model.regression()
+skfit=lmod.fit(X,Y)
+print skfit.coef_,skfit.intercept_
+c=skfit.coef_
+c=np.append(c,skfit.coef_)    
+XF<-np.insert(x,k,values=1,axis=1)
+             
+             
+#least squares solution
+x1<-XF.transpose()
+x2<-x1.dot(XF)
+x3<-np.linalg.inv(x2)
+x4<-x3.dot(x1)
+betahat<-x3.dot(Y)
+print betahat
+Ypred=XF.dot(betahat)
+residual=Y-Ypred
+residmean=np.mean(resid)
+residvar=np.var(resid)             
