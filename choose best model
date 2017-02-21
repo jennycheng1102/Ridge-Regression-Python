@@ -1,0 +1,41 @@
+import numpy as np
+from sklearn.model_selection import cross_val_score,train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn import datasets,svm
+from sklearn.linear_model import LogisticRegression
+
+iris=datasets.load_iris()
+X=iris.data
+y=iris.target
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.4,random_state=4)
+logreg=LogisticRegression()
+logreg.fit(X_train,y_train)
+y_pred=logreg.predict(X_test)
+
+from sklearn import metrics
+#proportion of correct predictions
+print 'logscore',metrics.accuracy_score(y_test,y_pred)
+
+#check scores of knn model with k=5 and k=1
+from sklearn.neighbors import KNeighborsClassifier
+knn=KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train,y_train)
+y_pred=knn.predict(X_test)
+print 'knnscore',metrics.accuracy_score(y_test,y_pred)
+
+#check scores of knn model from k=1 to 26
+k_range=range(1,26)
+scores=[]
+for k in k_range:
+    knn=KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train,y_train)
+    y_pred=knn.predict(X_test)
+    scores.append(metrics.accuracy_score(y_test,y_pred))
+print(scores)    
+#logscore 0.95
+#knnscore 0.966666666667
+#[0.94999999999999996, 0.94999999999999996, 0.96666666666666667, 0.96666666666666667, 0.96666666666666667,
+#0.98333333333333328, 0.98333333333333328, 0.98333333333333328, 0.98333333333333328, 0.98333333333333328,
+#0.98333333333333328, 0.98333333333333328, 0.98333333333333328, 0.98333333333333328, 0.98333333333333328, 
+#0.98333333333333328, 0.98333333333333328, 0.96666666666666667, 0.98333333333333328, 0.96666666666666667,
+#0.96666666666666667, 0.96666666666666667, 0.96666666666666667, 0.94999999999999996, 0.94999999999999996]
