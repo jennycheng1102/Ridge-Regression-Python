@@ -1,0 +1,38 @@
+from sklearn.datasets import fetch_20newsgroups
+newsgroups_train=fetch_20newsgroups(subset='train')
+from pprint import pprint
+print(list())
+#%run "/var/folders/cz/8_l06r3s48bc_jqkrqsjpdmr00012f/T/tmp6kXd0v.py"
+['alt.atheism',
+ 'comp.graphics',
+ 'comp.os.ms-windows.misc',
+ 'comp.sys.ibm.pc.hardware',
+ 'comp.sys.mac.hardware',
+ 'comp.windows.x',
+ 'misc.forsale',
+ 'rec.autos',
+ 'rec.motorcycles',
+ 'rec.sport.baseball',
+ 'rec.sport.hockey',
+ 'sci.crypt',
+ 'sci.electronics',
+ 'sci.med',
+ 'sci.space',
+ 'soc.religion.christian',
+ 'talk.politics.guns',
+ 'talk.politics.mideast',
+ 'talk.politics.misc',
+ 'talk.religion.misc']
+#load a sub_selection of the categories by passing the list of category
+cats=['alt.atheism']
+newsgroups_train2=fetch_20newsgroups(subset='train',categories=cats)
+#in order to feed predictive models with the text data,need to turn text data into vector of 
+numericalvalues for statistical analysis,which can be achived by sklearn.feature_extraction.
+from sklearn.feature_extraction.text import TfidfVectorizer
+categories=['alt.atheism',talk.religion.misc]
+newsgroups_train=fetch_20newsgroups(subset=''train,categories=categories)
+vectorzier=TfidfVectorizer()
+vectors=vectorizer.fit_transform(newsgroups_traindata)
+vectors.nnz/float(vectors.shape[0])
+#159.013274
+#average 159non_zero components by sample in amore that 30000 dimensional space 
