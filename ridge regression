@@ -1,0 +1,130 @@
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+#import sklearn
+from sklearn.preprocessing import scale
+from sklearn import cross_validation
+from sklearn.linear_model import Ridge, RidgeCV, Lasso, LassoCV, LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split, cross_val_score
+import pandas as pd
+import seaborn as sns
+
+
+def getacf(x,nlags):
+    a = [] 
+#    print nlags,len(x),x[0]
+    for i in range(nlags):
+        c = 0.0
+        for j in range(len(x)-i):
+            c = c + x[j]*x[j+i] 
+#        print i, c    
+        c  = c /len(x) 
+        a.append(c) 
+    return a
+        
+
+plt.close('all')
+
+
+df = pd.read_csv('/Users/Jennycheng/Downloads/Hitters.csv').dropna().drop('Player',axis=1)
+df.index = range(len(df))
+#df.info()
+dumies = pd.get_dummies(df[['League', 'Division', 'NewLeague']])
+y = df.Salary
+
+X_ = df.drop(['Salary','League','Division','NewLeague'],axis=1).astype('float64')
+
+#FEATURES
+X = pd.concat([X_, dumies[['League_N', 'Division_W','NewLeague_N']]], axis=1)
+
+
+# correlation of features 
+
+xcorr = X.corr()
+fnames = list(X)
+nf = len(X.columns)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.imshow(xcorr,cmap='hot')
+#cax = ax.matshow(xcorr, vmin=-1, vmax=1)
+fig.colorbar(cax)
+ticks = np.arange(0,nf,1)
+ax.set_xticks(ticks)
+ax.set_yticks(ticks)
+ax.set_xticklabels(fnames,rotation="90")
+ax.set_yticklabels(fnames)
+plt.show()
+
+
+Xt = X 
+Yt = y
+
+#----- least squares 
+# Simulated data 
+NF = 2  # number of features 
+k = 400   # number of observations 
+
+# Data synthesis 
+nord = 2
+Xt = np.zeros((k,NF))
+Yt = np.zeros((k))
+w = np.zeros((nord)) 
+
+xmin = 0.0
+xmax = 1.0
+#X[:,0] = np.linspace(xmin,xmax,k)
+Xt[:,0] = np.random.rand(k)
+#X[:,1] = X[:,0]**2
+Xt[:,1] = np.random.rand(k)
+ 
+#XF = np.insert(X,NF, values=1,axis=1)
+
+w[0] = 0.65
+w[1] = 0.9
+#w[2] = 0.5
+
+Yt = Xt.dot(w) 
+
+# add noise
+var = 0.05
+mu, sigma = 0.0, np.sqrt(var) 
+g = mu + sigma * np.random.randn(k) 
+
+Yt = Yt + g 
+
+
+ # Ridge Regression 
+ 
+#ridgeXkFold = cross_validation.KFold(nX,n_folds=2,shuffle=True, random_state=66)
+#alphas = 10**np.linspace(10,-2,100)
+
+#ridgeX = Ridge(normalize=True)
+#coefsRidgeX = [] 
+
+#for a in alphas:
+    #ridgeX.set_params(alpha=a)
+    #index = 0
+    #for trainset,testset in ridgeXkFold:
+    #    Xttrain = Xt.loc[~Xt.index.isin(trainset)]
+    #    ridgeX.fit(Xttrain,Yt[trainset])
+    #    coefsRidgeX.append(ridgeX.coef_)
+    
+#np.shape(coefs)
+
+#ridge2 = Ridge(alpha=4,normalize=True)
+#ridge2.fit(X_train,y_train)
+#predRidge = ridge2.predict(X_test)
+
+#print(mean_squared_error(y_test,predRidge))
+
+#ax = plt.gca()
+#ax.plot(alphas,coefs)
+#ax.set_xscale('log')
+#plt.axis('tight')
+#plt.xlabel('alpha')
+#plt.ylabel('weights')
+
+#plt.show()
+
+
